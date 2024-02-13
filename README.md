@@ -1,3 +1,21 @@
+<h1 align="center">
+
+[![License][license-badge]][license]
+[![CI][test-badge]][test]
+[![Latest release][latest-release-badge]][releases]
+[![Project Chat][chat-badge]][chat-url]
+
+[license-badge]: https://img.shields.io/github/license/prefix-dev/rattler-build-action?style=flat-square
+[license]: ./LICENSE
+[test-badge]: https://img.shields.io/github/actions/workflow/status/prefix-dev/rattler-build-action/test.yml?style=flat-square
+[test]: https://github.com/prefix-dev/rattler-build-action/actions/
+[latest-release-badge]: https://img.shields.io/github/v/tag/prefix-dev/rattler-build-action?style=flat-square&label=latest&sort=semver
+[releases]: https://github.com/prefix-dev/rattler-build-action/releases
+[chat-badge]: https://img.shields.io/discord/1082332781146800168.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2&style=flat-square
+[chat-url]: https://discord.gg/kKV8ZxyzY4
+
+</h1>
+
 # rattler-build-action 📦🐍
 
 `rattler-build-action` is a GitHub Action for building conda packages using [rattler-build](https://github.com/prefix-dev/rattler-build).
