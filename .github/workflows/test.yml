@@ -1,0 +1,59 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  bump:
+    name: Test action
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        recipe:
+          - polarify
+          - test-package
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - macos-14
+          - windows-latest
+        rattler-build-version:
+          - '' # default
+          - latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./
+        with:
+          recipe-path: test/${{ matrix.recipe }}/recipe.yaml
+          artifact-name: package-${{ matrix.recipe }}-${{ matrix.os }}-${{ matrix.rattler-build-version }}
+
+  check-readme:
+    name: Check versions in README.md
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check rattler-build-action version mentions
+        run: |
+          project_version="$(yq '.version' project.toml)"
+          count_expected=5
+          count_actual="$(grep -c "prefix-dev/rattler-build-action@v${project_version}" README.md || true)"
+          if [ "$count_actual" -ne "$count_expected" ]; then
+            echo "::error file=README.md::Expected $count_expected mentions of \`rattler-build-action@v$project_version\` in README.md, but found $count_actual."
+            exit 1
+          fi
+      - name: Check rattler-build version mentions
+        run: |
+          rattler_build_version="$(yq '.inputs.rattler-build-version' action.yml)"
+          count_expected=1
+          count_actual="$(grep -c "rattler-build-version" README.md | grep "$rattler_build_version" || true)"
+          if [ "$count_actual" -ne "$count_expected" ]; then
+            echo "::error file=README.md::Expected $count_expected mentions of \`rattler-build\` version \`0.6.0\` in README.md, but found $count_actual."
+            exit 1
+          fi

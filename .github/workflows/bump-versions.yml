@@ -1,0 +1,36 @@
+name: Bump versions
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * *"
+
+jobs:
+  bump:
+    name: Bump ${{ matrix.tool }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - tool: rattler-build
+            repo: prefix-dev/rattler-build
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bump versions
+        id: bump
+        run: |
+          set -exuo pipefail
+          new_version="$(gh repo view --json latestRelease ${{ matrix.repo }} | jq -r '.latestRelease.tagName')"
+          echo "new-version=$new_version" >> "$GITHUB_OUTPUT"
+          yq -i ".inputs.${{ matrix.tool }}-version.default = \"$new_version\"" action.yml
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@b1ddad2c994a25fbc81a28b3ec0e368bb2021c50
+        with:
+          title: Bump ${{ matrix.tool }} to ${{ steps.bump.outputs.new-version }}
+          delete-branch: true
+          commit-message: Bump ${{ matrix.tool }} version to ${{ steps.bump.outputs.new-version }}
+          branch: bump-${{ matrix.tool }}-${{ steps.bump.outputs.new-version }}
+          labels: dependencies,breaking
+          body: |
+            - [ ] Update version in [project.toml](https://github.com/prefix-dev/rattler-build-action/blob/bump-${{ matrix.tool }}-${{ steps.bump.outputs.new-version }}/project.toml)
