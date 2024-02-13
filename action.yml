@@ -1,5 +1,9 @@
 name: rattler-build-action
 description: GitHub action to build conda packages using rattler-build
+author: Pavel Zwerschke
+branding:
+  icon: package
+  color: yellow
 inputs:
   rattler-build-version:
     description: Version of rattler-build to use
