@@ -2,7 +2,7 @@ name: Bump versions
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 6 * * *"
+    - cron: 0 6 * * *
 
 jobs:
   bump:
@@ -31,6 +31,6 @@ jobs:
           delete-branch: true
           commit-message: Bump ${{ matrix.tool }} version to ${{ steps.bump.outputs.new-version }}
           branch: bump-${{ matrix.tool }}-${{ steps.bump.outputs.new-version }}
-          labels: dependencies,breaking
+          labels: dependencies,enhancement
           body: |
             - [ ] Update version in [project.toml](https://github.com/prefix-dev/rattler-build-action/blob/bump-${{ matrix.tool }}-${{ steps.bump.outputs.new-version }}/project.toml)
