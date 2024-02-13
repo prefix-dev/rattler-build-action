@@ -23,8 +23,9 @@ jobs:
 
 > [!WARNING]
 > Since rattler-build is still experimental and the API can change in minor versions, please pin this action to its minor version, i.e., `prefix-dev/rattler-build-action@v0.1.1`.
+
 > [!TIP]
-> Please make sure to have private repositories enabled for dependabot, otherwise dependabot will fail silently for your repository.
+> You can use dependabot to automatically update the version of `rattler-build-action`. Add the following to your `.github/dependabot.yml`:
 >
 > ```yml
 > version: 2
