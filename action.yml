@@ -8,7 +8,7 @@ inputs:
   rattler-build-version:
     description: Version of rattler-build to use
     required: false
-    default: 'v0.10.0'
+    default: 'v0.11.0'
   recipe-path:
     description: Path to the recipe.yaml file
     required: true
@@ -65,11 +65,15 @@ runs:
       if: ${{ runner.os != 'Windows' }}
       run: |
         rattler-build build --recipe "${{ inputs.recipe-path }}" ${{ inputs.build-args }}
+      env:
+        RATTLER_BUILD_ENABLE_GITHUB_INTEGRATION: 'true'
     - name: Build conda package (Windows)
       shell: powershell
       if: ${{ runner.os == 'Windows' }}
       run: |
         rattler-build build --recipe "${{ inputs.recipe-path }}" ${{ inputs.build-args }}
+      env:
+        RATTLER_BUILD_ENABLE_GITHUB_INTEGRATION: 'true'
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       if: ${{ inputs.upload-artifact == 'true' }}
