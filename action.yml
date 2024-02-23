@@ -67,7 +67,7 @@ runs:
         rattler-build build --recipe "${{ inputs.recipe-path }}" --color always ${{ inputs.build-args }}
       env:
         RATTLER_BUILD_ENABLE_GITHUB_INTEGRATION: 'true'
-        RATTLER_BUILD_COLOR: 'true'
+        RATTLER_BUILD_COLOR: 'always'
     - name: Build conda package (Windows)
       shell: powershell
       if: ${{ runner.os == 'Windows' }}
@@ -75,7 +75,7 @@ runs:
         rattler-build build --recipe "${{ inputs.recipe-path }}" ${{ inputs.build-args }}
       env:
         RATTLER_BUILD_ENABLE_GITHUB_INTEGRATION: 'true'
-        RATTLER_BUILD_COLOR: 'true'
+        RATTLER_BUILD_COLOR: 'always'
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       if: ${{ inputs.upload-artifact == 'true' }}
