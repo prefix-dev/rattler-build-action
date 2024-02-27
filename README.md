@@ -129,6 +129,26 @@ jobs:
         QUETZ_CHANNEL: my-channel
 ```
 
+### Upload to prefix.dev
+
+```yml
+jobs:
+  build:
+    name: Build package
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build conda package
+      uses: prefix-dev/rattler-build-action@v0.2.0
+    - run: |
+        for pkg in $(find output -type f \( -name "*.conda" -o -name "*.tar.bz2" \) ); do
+          echo "Uploading ${pkg}"
+          rattler-build upload prefix -c my-channel "${pkg}"
+        done
+      env:
+        PREFIX_API_KEY: ${{ secrets.PREFIX_API_KEY }}
+```
+
 ### Use private channel
 
 You can use a private channel while building your conda package by setting the `RATTLER_AUTH_FILE` environment variable.
