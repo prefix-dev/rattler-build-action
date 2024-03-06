@@ -25,62 +25,67 @@ inputs:
     description: arguments to pass to rattler-build
     required: false
     default: ''
+# runs:
+#   using: composite
+#   steps:
+#     - name: Generate rattler-build URL
+#       shell: bash
+#       id: url
+#       run: |
+#         arch=$(uname -m)
+#         if [ "$arch" = "arm64" ]; then
+#           arch="aarch64"
+#         fi
+#         platform=${{ runner.os == 'macOS' && 'apple-darwin' || '' }}${{ runner.os == 'Linux' && 'unknown-linux-musl' || '' }}${{ runner.os == 'Windows' && 'pc-windows-msvc' || '' }}
+#         if [ ${{ inputs.rattler-build-version }} = "latest" ]; then
+#           url="https://github.com/prefix-dev/rattler-build/releases/latest/download/rattler-build-$arch-$platform${{ runner.os == 'Windows' && '.exe' || '' }}"
+#         else
+#           url="https://github.com/prefix-dev/rattler-build/releases/download/${{ inputs.rattler-build-version }}/rattler-build-$arch-$platform${{ runner.os == 'Windows' && '.exe' || '' }}"
+#         fi
+#         echo "url=$url" >> $GITHUB_OUTPUT
+#     - name: Install rattler-build (Unix)
+#       shell: bash
+#       if: ${{ runner.os != 'Windows' }}
+#       run: |
+#         mkdir -p ${{ runner.temp }}/rattler-build
+#         curl -Ls \
+#           ${{ steps.url.outputs.url }} \
+#           -o ${{ runner.temp }}/rattler-build/rattler-build
+#         chmod +x ${{ runner.temp }}/rattler-build/rattler-build
+#         echo ${{ runner.temp }}/rattler-build >> $GITHUB_PATH
+#     - name: Install rattler-build (Windows)
+#       shell: powershell
+#       if: ${{ runner.os == 'Windows' }}
+#       run: |
+#         New-Item -ItemType Directory -Path "${{ runner.temp }}\rattler-build" -Force
+#         Invoke-WebRequest -Uri "${{ steps.url.outputs.url }}" -OutFile "${{ runner.temp }}\rattler-build\rattler-build.exe"
+#         Add-Content -Path $env:GITHUB_PATH -Value "${{ runner.temp }}\rattler-build"
+#     - name: Build conda package (non-Windows)
+#       shell: bash
+#       if: ${{ runner.os != 'Windows' }}
+#       run: |
+#         rattler-build build --recipe "${{ inputs.recipe-path }}" ${{ inputs.build-args }}
+#       env:
+#         RATTLER_BUILD_ENABLE_GITHUB_INTEGRATION: 'true'
+#         RATTLER_BUILD_COLOR: 'always'
+#     - name: Build conda package (Windows)
+#       shell: powershell
+#       if: ${{ runner.os == 'Windows' }}
+#       run: |
+#         rattler-build build --recipe "${{ inputs.recipe-path }}" ${{ inputs.build-args }}
+#       env:
+#         RATTLER_BUILD_ENABLE_GITHUB_INTEGRATION: 'true'
+#         RATTLER_BUILD_COLOR: 'always'
+#     - name: Upload build artifacts
+#       uses: actions/upload-artifact@v4
+#       if: ${{ inputs.upload-artifact == 'true' }}
+#       with:
+#         name: ${{ inputs.artifact-name }}
+#         path: |
+#           output/**/*.tar.bz2
+#           output/**/*.conda
+
 runs:
-  using: composite
-  steps:
-    - name: Generate rattler-build URL
-      shell: bash
-      id: url
-      run: |
-        arch=$(uname -m)
-        if [ "$arch" = "arm64" ]; then
-          arch="aarch64"
-        fi
-        platform=${{ runner.os == 'macOS' && 'apple-darwin' || '' }}${{ runner.os == 'Linux' && 'unknown-linux-musl' || '' }}${{ runner.os == 'Windows' && 'pc-windows-msvc' || '' }}
-        if [ ${{ inputs.rattler-build-version }} = "latest" ]; then
-          url="https://github.com/prefix-dev/rattler-build/releases/latest/download/rattler-build-$arch-$platform${{ runner.os == 'Windows' && '.exe' || '' }}"
-        else
-          url="https://github.com/prefix-dev/rattler-build/releases/download/${{ inputs.rattler-build-version }}/rattler-build-$arch-$platform${{ runner.os == 'Windows' && '.exe' || '' }}"
-        fi
-        echo "url=$url" >> $GITHUB_OUTPUT
-    - name: Install rattler-build (Unix)
-      shell: bash
-      if: ${{ runner.os != 'Windows' }}
-      run: |
-        mkdir -p ${{ runner.temp }}/rattler-build
-        curl -Ls \
-          ${{ steps.url.outputs.url }} \
-          -o ${{ runner.temp }}/rattler-build/rattler-build
-        chmod +x ${{ runner.temp }}/rattler-build/rattler-build
-        echo ${{ runner.temp }}/rattler-build >> $GITHUB_PATH
-    - name: Install rattler-build (Windows)
-      shell: powershell
-      if: ${{ runner.os == 'Windows' }}
-      run: |
-        New-Item -ItemType Directory -Path "${{ runner.temp }}\rattler-build" -Force
-        Invoke-WebRequest -Uri "${{ steps.url.outputs.url }}" -OutFile "${{ runner.temp }}\rattler-build\rattler-build.exe"
-        Add-Content -Path $env:GITHUB_PATH -Value "${{ runner.temp }}\rattler-build"
-    - name: Build conda package (non-Windows)
-      shell: bash
-      if: ${{ runner.os != 'Windows' }}
-      run: |
-        rattler-build build --recipe "${{ inputs.recipe-path }}" ${{ inputs.build-args }}
-      env:
-        RATTLER_BUILD_ENABLE_GITHUB_INTEGRATION: 'true'
-        RATTLER_BUILD_COLOR: 'always'
-    - name: Build conda package (Windows)
-      shell: powershell
-      if: ${{ runner.os == 'Windows' }}
-      run: |
-        rattler-build build --recipe "${{ inputs.recipe-path }}" ${{ inputs.build-args }}
-      env:
-        RATTLER_BUILD_ENABLE_GITHUB_INTEGRATION: 'true'
-        RATTLER_BUILD_COLOR: 'always'
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
-      if: ${{ inputs.upload-artifact == 'true' }}
-      with:
-        name: ${{ inputs.artifact-name }}
-        path: |
-          output/**/*.tar.bz2
-          output/**/*.conda
+  using: node20
+  main: dist/index.js
+  post: dist/post.js
