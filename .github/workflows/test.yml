@@ -41,7 +41,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Check rattler-build-action version mentions
         run: |
-          project_version="$(yq '.version' project.toml)"
+          project_version="$(jq -r '.version' package.json)"
           count_expected=6
           count_actual="$(grep -c "prefix-dev/rattler-build-action@v${project_version}" README.md || true)"
           if [ "$count_actual" -ne "$count_expected" ]; then
