@@ -129,13 +129,20 @@ jobs:
         QUETZ_CHANNEL: my-channel
 ```
 
-### Upload to prefix.dev
+### Upload to prefix.dev via OIDC from GitHub Actions
+
+This requires you to configure the workflow as a trusted publisher for your target channel (see [Trusted Publishing to Conda Channels](https://prefix.dev/blog/trusted_publishing_to_conda_channels)).
 
 ```yml
 jobs:
   build:
     name: Build package
     runs-on: ubuntu-latest
+    
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
     - uses: actions/checkout@v4
     - name: Build conda package
@@ -145,8 +152,6 @@ jobs:
           echo "Uploading ${pkg}"
           rattler-build upload prefix -c my-channel "${pkg}"
         done
-      env:
-        PREFIX_API_KEY: ${{ secrets.PREFIX_API_KEY }}
 ```
 
 ### Use private channel
