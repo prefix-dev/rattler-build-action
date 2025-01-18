@@ -36,7 +36,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build conda package
-      uses: prefix-dev/rattler-build-action@v0.2.26
+      uses: prefix-dev/rattler-build-action@v0.2.27
 ```
 
 > [!WARNING]
@@ -100,7 +100,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build conda package
-      uses: prefix-dev/rattler-build-action@v0.2.26
+      uses: prefix-dev/rattler-build-action@v0.2.27
       with:
         # needs to be unique for each matrix entry
         artifact-name: package-${{ matrix.target-platform }}
@@ -117,7 +117,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build conda package
-      uses: prefix-dev/rattler-build-action@v0.2.26
+      uses: prefix-dev/rattler-build-action@v0.2.27
     - run: |
         for pkg in $(find output -type f \( -name "*.conda" -o -name "*.tar.bz2" \) ); do
           echo "Uploading ${pkg}"
@@ -146,7 +146,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build conda package
-      uses: prefix-dev/rattler-build-action@v0.2.26
+      uses: prefix-dev/rattler-build-action@v0.2.27
     - run: |
         for pkg in $(find output -type f \( -name "*.conda" -o -name "*.tar.bz2" \) ); do
           echo "Uploading ${pkg}"
@@ -172,7 +172,7 @@ jobs:
         echo '{"my.quetz.server": {"CondaToken": "${{ secrets.QUETZ_API_KEY }}"}}' > "$RATTLER_AUTH_FILE"
         echo "RATTLER_AUTH_FILE=$RATTLER_AUTH_FILE" >> "$GITHUB_ENV"
     - name: Build conda package
-      uses: prefix-dev/rattler-build-action@v0.2.26
+      uses: prefix-dev/rattler-build-action@v0.2.27
       with:
         build-args: -c conda-forge -c https://my.quetz.server/get/my-channel
 ```
