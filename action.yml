@@ -8,7 +8,7 @@ inputs:
   rattler-build-version:
     description: Version of rattler-build to use
     required: false
-    default: 'v0.35.6'
+    default: 'v0.35.7'
   recipe-path:
     description: Path to the recipe.yaml file
     required: true
