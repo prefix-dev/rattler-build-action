@@ -24,6 +24,7 @@ jobs:
           - macos-13
           - macos-latest
           - windows-latest
+          - ubuntu-24.04-arm
         rattler-build-version:
           - '' # default
           - latest
