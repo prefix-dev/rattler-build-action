@@ -95,7 +95,7 @@ jobs:
             target-platform: win-64
           - os: macos-13
             target-platform: osx-64
-          - os: macos-14
+          - os: macos-latest
             target-platform: osx-arm64
     steps:
     - uses: actions/checkout@v4
