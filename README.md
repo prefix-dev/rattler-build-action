@@ -89,13 +89,13 @@ jobs:
         include:
           - os: ubuntu-latest
             target-platform: linux-64
-          - os: ubuntu-latest
+          - os: ubuntu-24.04-arm
             target-platform: linux-aarch64
           - os: windows-latest
             target-platform: win-64
-          - os: macos-latest
+          - os: macos-13
             target-platform: osx-64
-          - os: macos-14
+          - os: macos-latest
             target-platform: osx-arm64
     steps:
     - uses: actions/checkout@v4
