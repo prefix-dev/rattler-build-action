@@ -21,8 +21,8 @@ jobs:
           - test-package
         os:
           - ubuntu-latest
-          - macos-13
-          - macos-latest
+          - macos-15-latest # Intel
+          - macos-latest # Apple Silicon
           - windows-latest
           - ubuntu-24.04-arm
         rattler-build-version:
