@@ -63,6 +63,7 @@ This action will build the conda recipe in `conda.recipe/recipe.yaml` and upload
 ## Customizations
 
 - `rattler-build-version`: Define the version of rattler-build. Pins to the latest version that is available when releasing.
+- `setup-only`: Only install rattler-build without building anything. Useful when you want to run `rattler-build` commands manually, e.g. `rattler-build upload` or `rattler-build publish`.
 - `recipe-path`: Path to the rattler recipe. Defaults to `conda.recipe/recipe.yaml`.
 - `upload-artifact`: Decide whether to upload the built packages as a build artifact.
 - `build-args`: Additional arguments to pass to `rattler-build build`.
@@ -105,6 +106,27 @@ jobs:
         # needs to be unique for each matrix entry
         artifact-name: package-${{ matrix.target-platform }}
         build-args: --target-platform ${{ matrix.target-platform }}${{ matrix.target-platform == 'linux-aarch64' && ' --no-test' || '' }}
+```
+
+### Setup rattler-build only
+
+Use `setup-only: true` to install rattler-build without running a build. This makes `rattler-build` available on `PATH` for subsequent steps so you can run any subcommand directly, such as `rattler-build upload` or `rattler-build publish`.
+
+```yml
+jobs:
+  upload:
+    name: Upload package
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup rattler-build
+      uses: prefix-dev/rattler-build-action@v0.2.34
+      with:
+        setup-only: true
+    - name: Build and upload
+      run: |
+        rattler-build build --recipe conda.recipe/recipe.yaml
+        rattler-build upload prefix -c my-channel output/**/*.conda
 ```
 
 ### Upload to quetz

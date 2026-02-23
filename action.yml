@@ -9,12 +9,16 @@ inputs:
     description: Version of rattler-build to use
     required: false
     default: 'v0.44.0'
+  setup-only:
+    description: Only install rattler-build without building anything.
+    required: false
+    default: 'false'
   recipe-path:
     description: Path to the recipe.yaml file
-    required: true
+    required: false
     default: conda.recipe/recipe.yaml
   upload-artifact:
-    description: whether to upload the built packages as a build artifact
+    description: Whether to upload the built packages as a build artifact
     required: false
     default: 'true'
   artifact-name:
@@ -22,7 +26,7 @@ inputs:
     required: false
     default: 'package'
   build-args:
-    description: arguments to pass to rattler-build
+    description: Arguments to pass to rattler-build
     required: false
     default: ''
 runs:
@@ -62,7 +66,7 @@ runs:
         Add-Content -Path $env:GITHUB_PATH -Value "${{ runner.temp }}\rattler-build"
     - name: Build conda package (non-Windows)
       shell: bash
-      if: ${{ runner.os != 'Windows' }}
+      if: ${{ runner.os != 'Windows' && inputs.setup-only != 'true' }}
       run: |
         rattler-build build --recipe "${{ inputs.recipe-path }}" ${{ inputs.build-args }}
       env:
@@ -70,7 +74,7 @@ runs:
         RATTLER_BUILD_COLOR: 'always'
     - name: Build conda package (Windows)
       shell: powershell
-      if: ${{ runner.os == 'Windows' }}
+      if: ${{ runner.os == 'Windows' && inputs.setup-only != 'true' }}
       run: |
         rattler-build build --recipe "${{ inputs.recipe-path }}" ${{ inputs.build-args }}
       env:
@@ -78,7 +82,7 @@ runs:
         RATTLER_BUILD_COLOR: 'always'
     - name: Upload build artifacts
       uses: actions/upload-artifact@v5
-      if: ${{ inputs.upload-artifact == 'true' }}
+      if: ${{ inputs.upload-artifact == 'true' && inputs.setup-only != 'true' }}
       with:
         name: ${{ inputs.artifact-name }}
         path: |
