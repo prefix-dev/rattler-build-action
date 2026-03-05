@@ -29,7 +29,7 @@ jobs:
           - '' # default
           - latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: ./
         with:
           recipe-path: test/${{ matrix.recipe }}/recipe.yaml
@@ -39,7 +39,7 @@ jobs:
     name: Check versions in README.md
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Check rattler-build-action version mentions
         run: |
           project_version="$(yq '.version' project.toml)"
