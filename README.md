@@ -34,13 +34,13 @@ jobs:
     name: Build package
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Build conda package
-      uses: prefix-dev/rattler-build-action@v0.2.35
+      uses: prefix-dev/rattler-build-action@v0.2.36
 ```
 
 > [!WARNING]
-> Since rattler-build is still experimental and the API can change in minor versions, please pin this action to its minor version, i.e., `prefix-dev/rattler-build-action@v0.2.35`.
+> Since rattler-build is still experimental and the API can change in minor versions, please pin this action to its minor version, i.e., `prefix-dev/rattler-build-action@v0.2.36`.
 
 > [!TIP]
 > You can use dependabot to automatically update the version of `rattler-build-action`. Add the following to your `.github/dependabot.yml`:
@@ -63,6 +63,7 @@ This action will build the conda recipe in `conda.recipe/recipe.yaml` and upload
 ## Customizations
 
 - `rattler-build-version`: Define the version of rattler-build. Pins to the latest version that is available when releasing.
+- `setup-only`: Only install rattler-build without building anything. Useful when you want to run `rattler-build` commands manually, e.g. `rattler-build upload` or `rattler-build publish`.
 - `recipe-path`: Path to the rattler recipe. Defaults to `conda.recipe/recipe.yaml`.
 - `upload-artifact`: Decide whether to upload the built packages as a build artifact.
 - `build-args`: Additional arguments to pass to `rattler-build build`.
@@ -98,13 +99,34 @@ jobs:
           - os: macos-latest
             target-platform: osx-arm64
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Build conda package
-      uses: prefix-dev/rattler-build-action@v0.2.35
+      uses: prefix-dev/rattler-build-action@v0.2.36
       with:
         # needs to be unique for each matrix entry
         artifact-name: package-${{ matrix.target-platform }}
         build-args: --target-platform ${{ matrix.target-platform }}${{ matrix.target-platform == 'linux-aarch64' && ' --no-test' || '' }}
+```
+
+### Setup rattler-build only
+
+Use `setup-only: true` to install rattler-build without running a build. This makes `rattler-build` available on `PATH` for subsequent steps so you can run any subcommand directly, such as `rattler-build upload` or `rattler-build publish`.
+
+```yml
+jobs:
+  upload:
+    name: Upload package
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+    - name: Setup rattler-build
+      uses: prefix-dev/rattler-build-action@v0.2.36
+      with:
+        setup-only: true
+    - name: Build and upload
+      run: |
+        rattler-build build --recipe conda.recipe/recipe.yaml
+        rattler-build upload prefix -c my-channel output/**/*.conda
 ```
 
 ### Upload to quetz
@@ -115,9 +137,9 @@ jobs:
     name: Build package
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Build conda package
-      uses: prefix-dev/rattler-build-action@v0.2.35
+      uses: prefix-dev/rattler-build-action@v0.2.36
     - run: |
         for pkg in $(find output -type f \( -name "*.conda" -o -name "*.tar.bz2" \) ); do
           echo "Uploading ${pkg}"
@@ -144,9 +166,9 @@ jobs:
       contents: read
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Build conda package
-      uses: prefix-dev/rattler-build-action@v0.2.35
+      uses: prefix-dev/rattler-build-action@v0.2.36
     - run: |
         for pkg in $(find output -type f \( -name "*.conda" -o -name "*.tar.bz2" \) ); do
           echo "Uploading ${pkg}"
@@ -172,7 +194,7 @@ jobs:
         echo '{"my.quetz.server": {"CondaToken": "${{ secrets.QUETZ_API_KEY }}"}}' > "$RATTLER_AUTH_FILE"
         echo "RATTLER_AUTH_FILE=$RATTLER_AUTH_FILE" >> "$GITHUB_ENV"
     - name: Build conda package
-      uses: prefix-dev/rattler-build-action@v0.2.35
+      uses: prefix-dev/rattler-build-action@v0.2.36
       with:
         build-args: -c conda-forge -c https://my.quetz.server/get/my-channel
 ```
