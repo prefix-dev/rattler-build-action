@@ -8,7 +8,7 @@ inputs:
   rattler-build-version:
     description: Version of rattler-build to use
     required: false
-    default: 'v0.44.0'
+    default: 'v0.58.4'
   setup-only:
     description: Only install rattler-build without building anything.
     required: false
@@ -81,7 +81,7 @@ runs:
         RATTLER_BUILD_ENABLE_GITHUB_INTEGRATION: 'true'
         RATTLER_BUILD_COLOR: 'always'
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
       if: ${{ inputs.upload-artifact == 'true' && inputs.setup-only != 'true' }}
       with:
         name: ${{ inputs.artifact-name }}
