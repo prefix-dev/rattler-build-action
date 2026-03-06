@@ -34,7 +34,7 @@ jobs:
     name: Build package
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Build conda package
       uses: prefix-dev/rattler-build-action@v0.2.35
 ```
@@ -99,7 +99,7 @@ jobs:
           - os: macos-latest
             target-platform: osx-arm64
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Build conda package
       uses: prefix-dev/rattler-build-action@v0.2.35
       with:
@@ -118,9 +118,9 @@ jobs:
     name: Upload package
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Setup rattler-build
-      uses: prefix-dev/rattler-build-action@v0.2.34
+      uses: prefix-dev/rattler-build-action@v0.2.35
       with:
         setup-only: true
     - name: Build and upload
@@ -137,7 +137,7 @@ jobs:
     name: Build package
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Build conda package
       uses: prefix-dev/rattler-build-action@v0.2.35
     - run: |
@@ -166,7 +166,7 @@ jobs:
       contents: read
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Build conda package
       uses: prefix-dev/rattler-build-action@v0.2.35
     - run: |
