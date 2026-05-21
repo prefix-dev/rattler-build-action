@@ -8,7 +8,7 @@ inputs:
   rattler-build-version:
     description: Version of rattler-build to use
     required: false
-    default: 'v0.62.0'
+    default: 'v0.65.0'
   setup-only:
     description: Only install rattler-build without building anything.
     required: false
