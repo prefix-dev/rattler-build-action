@@ -33,4 +33,4 @@ jobs:
           branch: bump-${{ matrix.tool }}
           labels: dependencies,enhancement
           body: |
-            - [ ] Update version in [project.toml](https://github.com/prefix-dev/rattler-build-action/blob/bump-${{ matrix.tool }}-${{ steps.bump.outputs.new-version }}/project.toml)
+            - [ ] Update version in [project.toml](https://github.com/prefix-dev/rattler-build-action/blob/bump-${{ matrix.tool }}/project.toml)
