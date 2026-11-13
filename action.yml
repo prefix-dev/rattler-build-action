@@ -62,6 +62,7 @@ runs:
       if: ${{ runner.os == 'Windows' }}
       run: |
         New-Item -ItemType Directory -Path "${{ runner.temp }}\rattler-build" -Force
+        $ProgressPreference = "SilentlyContinue"
         Invoke-WebRequest -Uri "${{ steps.url.outputs.url }}" -OutFile "${{ runner.temp }}\rattler-build\rattler-build.exe"
         Add-Content -Path $env:GITHUB_PATH -Value "${{ runner.temp }}\rattler-build"
     - name: Build conda package (non-Windows)
